@@ -47,8 +47,10 @@ void optimizeSingleFrame(
     // Init g2o
     typedef g2o::BlockSolver<g2o::BlockSolverTraits<6, 3>> Block;                                  // dim(pose) = 6, dim(landmark) = 3
     Block::LinearSolverType *linearSolver = new g2o::LinearSolverCSparse<Block::PoseMatrixType>(); // solver for linear equation
-    Block *solver_ptr = new Block(linearSolver);                                                   // solver for matrix block
-    g2o::OptimizationAlgorithmLevenberg *solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
+    //Block *solver_ptr = new Block(linearSolver);    
+    Block *solver_ptr = new Block(std::unique_ptr<Block::LinearSolverType>(linearSolver));                                             
+    //g2o::OptimizationAlgorithmLevenberg *solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
+    g2o::OptimizationAlgorithmLevenberg *solver = new g2o::OptimizationAlgorithmLevenberg(std::unique_ptr<Block>(solver_ptr));
     g2o::SparseOptimizer optimizer;
     optimizer.setAlgorithm(solver);
 
@@ -194,8 +196,10 @@ void bundleAdjustment(
     Block::LinearSolverType *linearSolver;
     // linearSolver = new g2o::LinearSolverCSparse<Block::PoseMatrixType>(); // solver for linear equation
     linearSolver = new g2o::LinearSolverDense<Block::PoseMatrixType>();
-    Block *solver_ptr = new Block(linearSolver); // solver for matrix block
-    g2o::OptimizationAlgorithmLevenberg *solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
+    //Block *solver_ptr = new Block(linearSolver); // solver for matrix block
+    Block *solver_ptr = new Block(std::unique_ptr<Block::LinearSolverType>(linearSolver));
+    //g2o::OptimizationAlgorithmLevenberg *solver = new g2o::OptimizationAlgorithmLevenberg(solver_ptr);
+    g2o::OptimizationAlgorithmLevenberg *solver = new g2o::OptimizationAlgorithmLevenberg(std::unique_ptr<g2o::OptimizationAlgorithmLevenberg>(solver_ptr));
     g2o::SparseOptimizer optimizer;
     optimizer.setAlgorithm(solver);
 

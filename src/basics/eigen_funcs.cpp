@@ -45,7 +45,7 @@ Sophus::SE3 transT_cv2sophus(const cv::Mat &T_cv)
 cv::Mat transT_sophus2cv(const Sophus::SE3 &T_sophus)
 {
     Eigen::Vector3d eigen_t(T_sophus.translation());
-    Eigen::Matrix3d eigen_R(T_sophus.rotation_matrix());
+    Eigen::Matrix3d eigen_R(T_sophus.rotationMatrix());
 
     cv::Mat cv_t, cv_R;
     eigen2cv(eigen_t, cv_t);
